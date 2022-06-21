@@ -1,0 +1,188 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Archivos de origen">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Archivos de encabezado">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Archivos de recursos">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\generate_image.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\main.cpp">
+      <Filter>Archivos de origen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\generate_image.h">
+      <Filter>Archivos de origen</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\maps\C1W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C2W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C3.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C4.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C5W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C6W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C7W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C8.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C9W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C10W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C11W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C12W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C13.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C14.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C14W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C15.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C16W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C17W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C18W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C19W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C20W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C21.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C22W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C23W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C24W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C25W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C26W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C27W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C28W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\C29W.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D1.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D2.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D3.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D4.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D5.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D6.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D7.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D9.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D10.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D11.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D13.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D14.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D15.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D16.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D17.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D18.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D19.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D20.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D21.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D22.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D24.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+    <Image Include="..\maps\D25.bmp">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
+  </ItemGroup>
+</Project>

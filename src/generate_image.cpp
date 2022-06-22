@@ -18,7 +18,7 @@
 
 
 int width_colores, height_colores;
-char* rgb_colores;
+unsigned char* rgb_colores;
 int width_alturas, height_alturas;
 unsigned char* valor_alturas;
 
@@ -38,12 +38,12 @@ BOOL UnloadDll(HMODULE* hMod) {
 HMODULE cuda_hMod = NULL;
 char cudaPath[] = "dll/CudaKernel.dll";
 // Function definition in the DLL
-typedef int (*func_type_cuda_dll)(int, char*);
+typedef int (*func_type_cuda_dll)(int img_width, int img_height, int map_width, int map_height, camera_t camera, unsigned char* rgb_colormap, unsigned char* heightmap, unsigned char* rgb_result);
 func_type_cuda_dll generate_voxel_image = NULL;
 
 // load cuda dll
 
-int init(void)
+int init_load_dll(void)
 {
 	char msg[1000];
 	int ret;
@@ -59,9 +59,6 @@ int init(void)
 	generate_voxel_image = (func_type_cuda_dll)GetProcAddress(cuda_hMod, "generate_voxel_image");
 	if (generate_voxel_image == NULL) {
 		sprintf_s(msg, "Function 'generate_voxel_image' not found, err: %d\r\n", GetLastError());
-	}
-	else {
-		//ret = generate_voxel_image(parameters...);
 	}
 	/*// unload cuda dll
 if(!UnloadDll(&cuda_hMod)) {
@@ -89,11 +86,18 @@ void init_voxel_maps(void)
 
 void obtain_voxel_bmp(int width, int height, BYTE* bmp_array, camera_t camera)
 {
-	///// GPU 
+	///// CPU 
 	voxel_space(camera, width, height, (char*)bmp_array, &width_colores, &height_colores, rgb_colores, &width_alturas, &height_alturas, valor_alturas);
 }
 
-void voxel_space(camera_t camera, int w, int h, char* rgb, int* w_colores, int* h_colores, char* rgb_colores, int* w_alturas, int* h_alturas, unsigned char* valor_alturas) {
+void obtain_voxel_bmp_cuda(int width, int height, BYTE* bmp_array, camera_t camera)
+{
+	///// CPU 
+	//int img_width, int img_height, int map_width, int map_height, camera_t camera, unsigned char* rgb_colormap, unsigned char* heightmap, unsigned char* rgb_result
+	generate_voxel_image(width, height, 1024, 1024, camera, rgb_colores, valor_alturas, (unsigned char*)bmp_array);
+}
+
+void voxel_space(camera_t camera, int w, int h, char* rgb, int* w_colores, int* h_colores, unsigned char* rgb_colores, int* w_alturas, int* h_alturas, unsigned char* valor_alturas) {
 
 	//Posición cámara en 1024x1024
 	//float p[2] = { 512.0f, 512.0f };
@@ -417,7 +421,7 @@ int write_bmp(const char* filename, int width, int height, char* rgb)
 	return(1);
 }
 
-void readBMP_RGB(char* filename, char** data_rgb, int* width_rgb, int* height_rgb)
+void readBMP_RGB(char* filename, unsigned char** data_rgb, int* width_rgb, int* height_rgb)
 {
 	int i;
 	FILE* f;
@@ -430,14 +434,14 @@ void readBMP_RGB(char* filename, char** data_rgb, int* width_rgb, int* height_rg
 	int height = *(int*)&info[22];
 
 	int size = 3 * width * height;
-	*data_rgb = new char[size];// allocate 3 bytes per pixel
+	*data_rgb = new unsigned char[size];// allocate 3 bytes per pixel
 
 	fread(*data_rgb, sizeof(char), size, f); // read the rest of the data at once
 	fclose(f);
 
 	for (i = 0; i < size; i += 3)
 	{
-		char tmp = (*data_rgb)[i];
+		unsigned char tmp = (*data_rgb)[i];
 		(*data_rgb)[i] = (*data_rgb)[i + 2];
 		(*data_rgb)[i + 2] = tmp;
 	}

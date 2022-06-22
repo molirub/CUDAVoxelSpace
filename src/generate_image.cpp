@@ -56,21 +56,21 @@ int init(void)
 		sprintf_s(msg, "Successfully loaded '%s'\r\n", cudaPath);
 	}
 	// call dll functions
-	generate_voxel_image = (func_type_cuda_dll)GetProcAddress(cuda_hMod, "dll_saxpy");
+	generate_voxel_image = (func_type_cuda_dll)GetProcAddress(cuda_hMod, "generate_voxel_image");
 	if (generate_voxel_image == NULL) {
-		sprintf_s(msg, "Function 'dll_saxpy' not found, err: %d\r\n", GetLastError());
+		sprintf_s(msg, "Function 'generate_voxel_image' not found, err: %d\r\n", GetLastError());
 	}
 	else {
-		ret = generate_voxel_image();
+		//ret = generate_voxel_image(parameters...);
 	}
 	/*// unload cuda dll
 if(!UnloadDll(&cuda_hMod)) {
 	sprintf_s(msg, "Error unloading '%s', err: %d\r\n", cudaPath, GetLastError());
-	updateTextA(msg);
 } else {
 	sprintf_s(msg, "Successfully unloaded '%s'\r\n", cudaPath);
-	updateTextA(msg);
 }*/
+
+	return 0;
 }
 
 int create_bmp(int width, int height, char* rgb, char* bmp_array, int size);

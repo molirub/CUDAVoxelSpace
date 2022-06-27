@@ -22,7 +22,7 @@ unsigned char* rgb_colores;
 int width_alturas, height_alturas;
 unsigned char* valor_alturas;
 
-BOOL LoadDll(HMODULE* hMod, char* dll_path) {
+BOOL LoadDll(HMODULE* hMod, wchar_t* dll_path) {
 	if (*hMod != NULL) return false;
 	*hMod = LoadLibrary(dll_path);
 	if (*hMod == NULL) return false;
@@ -36,7 +36,7 @@ BOOL UnloadDll(HMODULE* hMod) {
 	return true;
 }
 HMODULE cuda_hMod = NULL;
-char cudaPath[] = "dll/CudaKernel.dll";
+wchar_t cudaPath[] = L"dll/CudaKernel.dll";
 // Function definition in the DLL
 typedef int (*func_type_cuda_dll)(int img_width, int img_height, int map_width, int map_height, camera_t camera, unsigned char* rgb_colormap, unsigned char* heightmap, unsigned char* rgb_result);
 func_type_cuda_dll generate_voxel_image = NULL;

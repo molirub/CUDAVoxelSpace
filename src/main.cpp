@@ -52,17 +52,17 @@ int WINAPI WinMain(HINSTANCE current_instance, HINSTANCE prev_instance, PSTR cmd
 	Gdiplus::GdiplusStartup(&gdiplustoken, &gdiplusStartupInput, nullptr);
 
 	// Create window class
-	const char* CLASSNAME = "ImageShowWindowClass";
+	const wchar_t* CLASSNAME = L"ImageShowWindowClass";
 	WNDCLASS wc{};
 	wc.hInstance = current_instance;
-	wc.lpszClassName = CLASSNAME;
+	wc.lpszClassName = L"ImageShowWindowClass";
 	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
 	wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
 	wc.lpfnWndProc = window_process_messages;
 	RegisterClass(&wc);
 
 	// Create window
-	CreateWindow(CLASSNAME, "Image Show", WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, width+15, height+40, nullptr, nullptr, nullptr, nullptr);
+	CreateWindow(CLASSNAME, L"Image Show", WS_OVERLAPPEDWINDOW | WS_VISIBLE, CW_USEDEFAULT, CW_USEDEFAULT, width+15, height+40, nullptr, nullptr, nullptr, nullptr);
 
 	// Window loop
 

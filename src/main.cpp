@@ -45,11 +45,17 @@ int WINAPI WinMain(HINSTANCE current_instance, HINSTANCE prev_instance, PSTR cmd
 	camera_values.horizon = IM_HEIGHT/2;
 	camera_values.distance = 600;
 
+	// Load cuda DLL
+
+	init_load_dll();
+
 
 	// Initialize GDI+
 	Gdiplus::GdiplusStartupInput gdiplusStartupInput;
 	ULONG_PTR gdiplustoken;
 	Gdiplus::GdiplusStartup(&gdiplustoken, &gdiplusStartupInput, nullptr);
+
+	
 
 	// Create window class
 	const char* CLASSNAME = "ImageShowWindowClass";
@@ -134,7 +140,11 @@ void draw(HWND hwnd)
 void generate_image()
 {
 	BYTE aux;
-	obtain_voxel_bmp(width, height, p_byte_array, camera_values);
+
+	// CPU
+	//obtain_voxel_bmp(width, height, p_byte_array, camera_values);
+	//GPU
+	obtain_voxel_bmp_cuda(width, height, p_byte_array, camera_values);
 	for (int i = 0; i < width * height*3; i += 3)
 	{
 		aux = p_byte_array[i];

@@ -36,11 +36,13 @@ BOOL UnloadDll(HMODULE* hMod) {
 	return true;
 }
 HMODULE cuda_hMod = NULL;
-char cudaPath[] = "dll/CudaKernel.dll";
+char cudaPath[] = "..\\build\\dll\\CudaKernel.dll";
 // Function definition in the DLL
 typedef int (*func_type_cuda_dll)(int img_width, int img_height, int map_width, int map_height, camera_t camera, unsigned char* rgb_colormap, unsigned char* heightmap, unsigned char* rgb_result);
 func_type_cuda_dll generate_voxel_image = NULL;
 
+
+//void __declspec (dllimport) generate_voxel_image_(int img_width, int img_height, int map_width, int map_height, camera_t camera, unsigned char* rgb_colormap, unsigned char* heightmap, unsigned char* rgb_result);
 // load cuda dll
 
 int init_load_dll(void)
@@ -92,7 +94,7 @@ void obtain_voxel_bmp(int width, int height, BYTE* bmp_array, camera_t camera)
 
 void obtain_voxel_bmp_cuda(int width, int height, BYTE* bmp_array, camera_t camera)
 {
-	///// CPU 
+	///// GPU 
 	//int img_width, int img_height, int map_width, int map_height, camera_t camera, unsigned char* rgb_colormap, unsigned char* heightmap, unsigned char* rgb_result
 	generate_voxel_image(width, height, 1024, 1024, camera, rgb_colores, valor_alturas, (unsigned char*)bmp_array);
 }

@@ -19,6 +19,8 @@ typedef struct camera_s
 	float distance; // 800   // distance of map
 } camera_t;
 
+bool is_initialized = false;
+
 __global__
 void voxel_kernel(int* img_width, int* img_height, int* map_width, int* map_height,
 	              float* pleftx, float* plefty, float* dx, float* dy, float* z, float* height, float* scale_height, float* horizon,
@@ -53,51 +55,73 @@ void voxel_kernel(int* img_width, int* img_height, int* map_width, int* map_heig
 
 extern "C" {
 
+	int map_size_rgb;
+	int map_size;
+	int size_rgb;
+
+	// Allocate memory in device
+	int* img_width_d;
+	int* img_height_d;
+	int* map_width_d;
+	int* map_height_d;
+	unsigned char* rgb_colormap_d;
+	unsigned char* heightmap_d;
+	unsigned char* rgb_result_d;
+
+	float* pleftx_d;
+	float* plefty_d;
+	float* dx_d;
+	float* dy_d;
+	float* z_d;
+	float* height_d;
+	float* scale_height_d;
+	float* horizon_d;
+
+
 	/* This function is exported in DLL and calls cuda kernel*/
 	int __declspec(dllexport) generate_voxel_image(int img_width, int img_height, int map_width, int map_height, camera_t camera, unsigned char* rgb_colormap, unsigned char* heightmap, unsigned char* rgb_result)
 	{
-		int map_size_rgb = map_width * map_height * 3;
-		int map_size = map_width * map_height;
-		int size_rgb = img_width * img_height * 3;
+		static bool is_initialized = false;
+		static int map_size_rgb;
+		static int map_size;
+		static int size_rgb;
 
-		// Allocate memory in device
-		int* img_width_d;
-		int* img_height_d;
-		int* map_width_d;
-		int* map_height_d;
-		unsigned char* rgb_colormap_d;
-		unsigned char* heightmap_d;
-		unsigned char* rgb_result_d;
+		if (!is_initialized)
+		{
+			is_initialized = true;
 
-		float* pleftx_d;
-		float* plefty_d;
-		float* dx_d;
-		float* dy_d;
-		float* z_d;
-		float* height_d;
-		float* scale_height_d;
-		float* horizon_d;
-		
+			map_size_rgb = map_width * map_height * 3;
+			map_size = map_width * map_height;
+			size_rgb = img_width * img_height * 3;
+
+			cudaMalloc(&img_width_d, sizeof(int));
+			cudaMalloc(&img_height_d, sizeof(int));
+			cudaMalloc(&map_width_d, sizeof(int));
+			cudaMalloc(&map_height_d, sizeof(int));
 
 
-		cudaMalloc(&img_width_d, sizeof(int));
-		cudaMalloc(&img_height_d, sizeof(int));
-		cudaMalloc(&map_width_d, sizeof(int));
-		cudaMalloc(&map_height_d, sizeof(int));
+			cudaMalloc(&rgb_colormap_d, map_size_rgb * sizeof(char));
+			cudaMalloc(&heightmap_d, map_size * sizeof(char));
+			cudaMalloc(&rgb_result_d, size_rgb * sizeof(char));
 
-		cudaMalloc(&rgb_colormap_d, map_size_rgb * sizeof(char));
-		cudaMalloc(&heightmap_d, map_size * sizeof(char));
-		cudaMalloc(&rgb_result_d, size_rgb * sizeof(char));
+			cudaMalloc(&pleftx_d, sizeof(float));
+			cudaMalloc(&plefty_d, sizeof(float));
+			cudaMalloc(&dx_d, sizeof(float));
+			cudaMalloc(&dy_d, sizeof(float));
+			cudaMalloc(&z_d, sizeof(float));
+			cudaMalloc(&height_d, sizeof(float));
+			cudaMalloc(&scale_height_d, sizeof(float));
+			cudaMalloc(&horizon_d, sizeof(float));
 
-		cudaMalloc(&pleftx_d, sizeof(float));
-		cudaMalloc(&plefty_d, sizeof(float));
-		cudaMalloc(&dx_d, sizeof(float));
-		cudaMalloc(&dy_d, sizeof(float));
-		cudaMalloc(&z_d, sizeof(float));
-		cudaMalloc(&height_d, sizeof(float));
-		cudaMalloc(&scale_height_d, sizeof(float));
-		cudaMalloc(&horizon_d, sizeof(float));
+			// Copiamos memoria a device antes del bucle
+			cudaMemcpy(img_width_d, &img_width, sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(img_height_d, &img_height, sizeof(int), cudaMemcpyHostToDevice);
 
+			cudaMemcpy(map_width_d, &map_width, sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(map_height_d, &map_height, sizeof(int), cudaMemcpyHostToDevice);
+			cudaMemcpy(rgb_colormap_d, rgb_colormap, map_size_rgb * sizeof(char), cudaMemcpyHostToDevice);
+			cudaMemcpy(heightmap_d, heightmap, map_size * sizeof(char), cudaMemcpyHostToDevice);
+		}
 
 		// Perform some previous calculations
 		// Copy data from host to device
@@ -128,20 +152,8 @@ extern "C" {
 		//Generación de cada una de la líneas de delante a detrás
 		float z = 1.0f;
 		float dz = 1.00f;
-
-		// Copiamos memoria a device antes del bucle
-		cudaMemcpy(img_width_d, &img_width, sizeof(int), cudaMemcpyHostToDevice);
-		cudaMemcpy(img_height_d, &img_height, sizeof(int), cudaMemcpyHostToDevice);
-
-		cudaMemcpy(map_width_d, &map_width, sizeof(int), cudaMemcpyHostToDevice);
-		cudaMemcpy(map_height_d, &map_height, sizeof(int), cudaMemcpyHostToDevice);
-
-		cudaMemcpy(rgb_colormap_d, rgb_colormap, map_size_rgb * sizeof(char), cudaMemcpyHostToDevice);
-		cudaMemcpy(heightmap_d, heightmap, map_size * sizeof(char), cudaMemcpyHostToDevice);
-		cudaMemcpy(rgb_result_d, rgb_result, size_rgb * sizeof(char), cudaMemcpyHostToDevice);
-
-
 		
+		cudaMemcpy(rgb_result_d, rgb_result, size_rgb * sizeof(char), cudaMemcpyHostToDevice);
 		cudaMemcpy(height_d, &height, sizeof(float), cudaMemcpyHostToDevice);
 		cudaMemcpy(scale_height_d, &scale_height, sizeof(float), cudaMemcpyHostToDevice);
 		cudaMemcpy(horizon_d, &horizon, sizeof(float), cudaMemcpyHostToDevice);
@@ -169,38 +181,36 @@ extern "C" {
 			cudaMemcpy(z_d, &z, sizeof(float), cudaMemcpyHostToDevice);
 
 			// Launch kernel
-			voxel_kernel <<< 128, 128 >>> (img_width_d, img_height_d, map_width_d, map_height_d, 
+			voxel_kernel <<< 64, 64 >>> (img_width_d, img_height_d, map_width_d, map_height_d, 
 				                           pleftx_d, plefty_d, dx_d, dy_d, z_d, height_d, scale_height_d, horizon_d,
 				                           rgb_colormap_d, heightmap_d, rgb_result_d);
 
-
-
 			z -= dz;
-			//dz += 0.005; // Se pierde muhca resolucion
+			//dz -= 0.005; // Se pierde muhca resolucion
 		}
 
 		// Copiamos del device al host
 		cudaMemcpy(rgb_result, rgb_result_d, size_rgb * sizeof(char), cudaMemcpyDeviceToHost);
 
 
-		cudaFree(img_width_d);
-		cudaFree(img_height_d);
-		cudaFree(map_width_d);
-		cudaFree(map_height_d);
+		//cudaFree(img_width_d);
+		//cudaFree(img_height_d);
+		//cudaFree(map_width_d);
+		//cudaFree(map_height_d);
 
-		cudaFree(pleftx_d);
-		cudaFree(plefty_d);
-		cudaFree(dx_d);
-		cudaFree(dy_d);
-		cudaFree(z_d);
-		
-		cudaFree(height_d);
-		cudaFree(scale_height_d);
-		cudaFree(horizon_d);
+		//cudaFree(pleftx_d);
+		//cudaFree(plefty_d);
+		//cudaFree(dx_d);
+		//cudaFree(dy_d);
+		//cudaFree(z_d);
+		//
+		//cudaFree(height_d);
+		//cudaFree(scale_height_d);
+		//cudaFree(horizon_d);
 
-		cudaFree(rgb_colormap_d);
-		cudaFree(heightmap_d);
-		cudaFree(rgb_result_d);
+		//cudaFree(rgb_colormap_d);
+		//cudaFree(heightmap_d);
+		//cudaFree(rgb_result_d);
 
 		return 0;
 	}

@@ -148,7 +148,7 @@ extern "C" {
 
 
 		z = distance;
-		while (z >= 1)
+		while (z > 1)
 		{
 
 			//Cálculo de los extremos de las líneas para FOV 90º
@@ -175,7 +175,7 @@ extern "C" {
 
 
 
-			z += dz;
+			z -= dz;
 			//dz += 0.005; // Se pierde muhca resolucion
 		}
 

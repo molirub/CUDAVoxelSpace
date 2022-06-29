@@ -188,6 +188,16 @@ extern "C" {
 		cudaFree(map_width_d);
 		cudaFree(map_height_d);
 
+		cudaFree(pleftx_d);
+		cudaFree(plefty_d);
+		cudaFree(dx_d);
+		cudaFree(dy_d);
+		cudaFree(z_d);
+		
+		cudaFree(height_d);
+		cudaFree(scale_height_d);
+		cudaFree(horizon_d);
+
 		cudaFree(rgb_colormap_d);
 		cudaFree(heightmap_d);
 		cudaFree(rgb_result_d);

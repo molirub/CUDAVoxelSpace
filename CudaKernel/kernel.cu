@@ -86,6 +86,8 @@ extern "C" {
 		static int map_size;
 		static int size_rgb;
 
+		static unsigned char* blue_sky;
+
 		if (!is_initialized)
 		{
 			is_initialized = true;
@@ -113,6 +115,15 @@ extern "C" {
 			cudaMalloc(&scale_height_d, sizeof(float));
 			cudaMalloc(&horizon_d, sizeof(float));
 
+			//Inicializar vector rgb a azulito para el cielo
+			blue_sky = (unsigned char*)malloc(img_width * img_height * 3 * sizeof(unsigned char));
+			for (int i = 0; i < img_width * img_height * 3; i += 3)
+			{
+				blue_sky[i] = 148;
+				blue_sky[i + 1] = 209;
+				blue_sky[i + 2] = 239;
+			}
+
 			// Copiamos memoria a device antes del bucle
 			cudaMemcpy(img_width_d, &img_width, sizeof(int), cudaMemcpyHostToDevice);
 			cudaMemcpy(img_height_d, &img_height, sizeof(int), cudaMemcpyHostToDevice);
@@ -125,13 +136,7 @@ extern "C" {
 
 		// Perform some previous calculations
 		// Copy data from host to device
-		//Inicializar vector rgb a azulito para el cielo
-		for (int i = 0; i < img_width * img_height * 3; i += 3)
-		{
-			rgb_result[i] = 148;
-			rgb_result[i + 1] = 209;
-			rgb_result[i + 2] = 239;
-		}
+		
 		float p[2] = { camera.x, camera.y };
 		//Altura cámara en bloques
 		float height = camera.height;
@@ -153,7 +158,7 @@ extern "C" {
 		float z = 1.0f;
 		float dz = 1.00f;
 		
-		cudaMemcpy(rgb_result_d, rgb_result, size_rgb * sizeof(char), cudaMemcpyHostToDevice);
+		cudaMemcpy(rgb_result_d, blue_sky, size_rgb * sizeof(char), cudaMemcpyHostToDevice);
 		cudaMemcpy(height_d, &height, sizeof(float), cudaMemcpyHostToDevice);
 		cudaMemcpy(scale_height_d, &scale_height, sizeof(float), cudaMemcpyHostToDevice);
 		cudaMemcpy(horizon_d, &horizon, sizeof(float), cudaMemcpyHostToDevice);

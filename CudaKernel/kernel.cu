@@ -138,7 +138,7 @@ extern "C" {
 
 		cudaMemcpy(rgb_colormap_d, rgb_colormap, map_size_rgb * sizeof(char), cudaMemcpyHostToDevice);
 		cudaMemcpy(heightmap_d, heightmap, map_size * sizeof(char), cudaMemcpyHostToDevice);
-		cudaMemcpy(rgb_result_d, rgb_result, map_size * sizeof(char), cudaMemcpyHostToDevice);
+		cudaMemcpy(rgb_result_d, rgb_result, size_rgb * sizeof(char), cudaMemcpyHostToDevice);
 
 
 		

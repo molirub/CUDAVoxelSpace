@@ -28,8 +28,11 @@ void voxel_kernel(int* img_width, int* img_height, int* map_width, int* map_heig
 {
 
 	// Sacamos i (columna actual
-	int i = blockIdx.x * blockDim.x + threadIdx.x;
+	int index = blockIdx.x * blockDim.x + threadIdx.x;
+	int i = index % 1024;
 	if (i >= *img_width) return;
+	int j = index / 1024;
+	if (j >= *img_height) return;
 	float pleftx_i = *pleftx + *dx * i;
 	float plefty_i = *plefty + *dy * i;
 
@@ -44,13 +47,12 @@ void voxel_kernel(int* img_width, int* img_height, int* map_width, int* map_heig
 	if (height_on_screen < 0) height_on_screen = 0;
 	if (height_on_screen > *img_height) height_on_screen = *img_height;
 	//Pintamos linea vertical
-	for (int j = (int)(floorf(height_on_screen)); j < (int)(floorf(*img_height)); j++)
-	{
-		int index_rgb = ((*img_width * j + i) * 3);
-		rgb_result[index_rgb + 0] = rgb_colormap[offset_alturas * 3 + 0];
-		rgb_result[index_rgb + 1] = rgb_colormap[offset_alturas * 3 + 1];
-		rgb_result[index_rgb + 2] = rgb_colormap[offset_alturas * 3 + 2];
-	}
+	if (j < (int)(floorf(height_on_screen)) ) return;
+
+	int index_rgb = ((*img_width * j + i) * 3);
+	rgb_result[index_rgb + 0] = rgb_colormap[offset_alturas * 3 + 0];
+	rgb_result[index_rgb + 1] = rgb_colormap[offset_alturas * 3 + 1];
+	rgb_result[index_rgb + 2] = rgb_colormap[offset_alturas * 3 + 2];
 }
 
 extern "C" {
@@ -86,6 +88,8 @@ extern "C" {
 		static int map_size;
 		static int size_rgb;
 
+		static unsigned char* blue_sky;
+
 		if (!is_initialized)
 		{
 			is_initialized = true;
@@ -113,6 +117,15 @@ extern "C" {
 			cudaMalloc(&scale_height_d, sizeof(float));
 			cudaMalloc(&horizon_d, sizeof(float));
 
+			//Inicializar vector rgb a azulito para el cielo
+			blue_sky = (unsigned char*)malloc(img_width * img_height * 3 * sizeof(unsigned char));
+			for (int i = 0; i < img_width * img_height * 3; i += 3)
+			{
+				blue_sky[i] = 148;
+				blue_sky[i + 1] = 209;
+				blue_sky[i + 2] = 239;
+			}
+
 			// Copiamos memoria a device antes del bucle
 			cudaMemcpy(img_width_d, &img_width, sizeof(int), cudaMemcpyHostToDevice);
 			cudaMemcpy(img_height_d, &img_height, sizeof(int), cudaMemcpyHostToDevice);
@@ -125,13 +138,7 @@ extern "C" {
 
 		// Perform some previous calculations
 		// Copy data from host to device
-		//Inicializar vector rgb a azulito para el cielo
-		for (int i = 0; i < img_width * img_height * 3; i += 3)
-		{
-			rgb_result[i] = 148;
-			rgb_result[i + 1] = 209;
-			rgb_result[i + 2] = 239;
-		}
+		
 		float p[2] = { camera.x, camera.y };
 		//Altura cámara en bloques
 		float height = camera.height;
@@ -151,9 +158,9 @@ extern "C" {
 
 		//Generación de cada una de la líneas de delante a detrás
 		float z = 1.0f;
-		float dz = 1.00f;
+		float dz = 2.0f;
 		
-		cudaMemcpy(rgb_result_d, rgb_result, size_rgb * sizeof(char), cudaMemcpyHostToDevice);
+		cudaMemcpy(rgb_result_d, blue_sky, size_rgb * sizeof(char), cudaMemcpyHostToDevice);
 		cudaMemcpy(height_d, &height, sizeof(float), cudaMemcpyHostToDevice);
 		cudaMemcpy(scale_height_d, &scale_height, sizeof(float), cudaMemcpyHostToDevice);
 		cudaMemcpy(horizon_d, &horizon, sizeof(float), cudaMemcpyHostToDevice);
@@ -181,12 +188,14 @@ extern "C" {
 			cudaMemcpy(z_d, &z, sizeof(float), cudaMemcpyHostToDevice);
 
 			// Launch kernel
-			voxel_kernel <<< 64, 64 >>> (img_width_d, img_height_d, map_width_d, map_height_d, 
+			voxel_kernel <<< 1024, 1024 >>> (img_width_d, img_height_d, map_width_d, map_height_d,
 				                           pleftx_d, plefty_d, dx_d, dy_d, z_d, height_d, scale_height_d, horizon_d,
 				                           rgb_colormap_d, heightmap_d, rgb_result_d);
 
 			z -= dz;
-			//dz -= 0.005; // Se pierde muhca resolucion
+			dz -= 0.001; // Se pierde muhca resolucion
+			if (dz < 1) dz = 1;
+			
 		}
 
 		// Copiamos del device al host

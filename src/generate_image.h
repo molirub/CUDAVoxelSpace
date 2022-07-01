@@ -2,8 +2,8 @@
 #define N_MAX 1078
 #define BMP_HEADER_SIZE 1078
 
-#define IM_WIDTH 1024
-#define IM_HEIGHT 1024
+#define IM_WIDTH 800
+#define IM_HEIGHT 600
 
 typedef struct camera_s
 {

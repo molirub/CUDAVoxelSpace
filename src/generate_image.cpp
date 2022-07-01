@@ -78,11 +78,11 @@ void init_voxel_maps(void)
 {
 	//Leemos BMP del mapa de colores y de alturas
 	//Mapa de colores 1024x1024 24 bit color a RGB bottom to top
-	char filename_colores[] = "../maps/C13.bmp";
+	char filename_colores[] = "../maps/C1W.bmp";
 	readBMP_RGB(filename_colores, &rgb_colores, &width_colores, &height_colores);
 
 	//Mapa de alturas 1024x1024 8 bit height map bottom to top
-	char filename_alturas[] = "../maps/D13.bmp";
+	char filename_alturas[] = "../maps/D1.bmp";
 	readBMP_HM(filename_alturas, &valor_alturas, &width_alturas, &height_alturas);
 }
 
@@ -161,12 +161,6 @@ void voxel_space(camera_t camera, int w, int h, char* rgb, int* w_colores, int* 
 		float dx = (pright[0] - pleft[0]) / (float)IM_WIDTH;
 		float dy = (pright[1] - pleft[1]) / (float)IM_WIDTH;
 
-		//Wrapping
-		//pleft[0] = fmodf(pleft[0], 1024.0f);
-		//if (pleft[0] < 0.0f) pleft[0] += 1024.0f;
-		//pleft[1] = fmodf(pleft[1], 1024.0f);
-		//if (pleft[1] < 0.0f) pleft[1] += 1024.0f;
-
 		// Truncado
 
 		//Para cada pixel de la línea en la pantalla
@@ -211,126 +205,6 @@ void voxel_space(camera_t camera, int w, int h, char* rgb, int* w_colores, int* 
 		z += dz;
 		//dz += 0.005; // Se pierde muhca resolucion
 	}
-
-	////Intento pantalla :(
-	//HDC hdc = GetDC(NULL);
-	//// Creating temp bitmap
-	//HBITMAP map = CreateBitmap(IM_WIDTH, // width. 512 in my case
-	//	IM_HEIGHT, // height
-	//	1, // Color Planes, unfortanutelly don't know what is it actually. Let it be 1
-	//	8 * 3, // Size of memory for one pixel in bits (in win32 4 bytes = 4*8 bits)
-	//	(void*)rgb); // pointer to array
-	//// Temp HDC to copy picture
-	//HDC src = CreateCompatibleDC(hdc); // hdc - Device context for window, I've got earlier with GetDC(hWnd) or GetDC(NULL);
-	//SelectObject(src, map); // Inserting picture into our temp HDC
-	//// Copy image from temp HDC to window
-	//BitBlt(hdc, // Destination
-	//	0,  // x and
-	//	0,  // y - upper-left corner of place, where we'd like to copy
-	//	IM_WIDTH, // width of the region
-	//	IM_HEIGHT, // height
-	//	src, // source
-	//	0,   // x and
-	//	0,   // y of upper left corner  of part of the source, from where we'd like to copy
-	//	SRCCOPY); // Defined DWORD to juct copy pixels. Watch more on msdn;
-	//
-	//DeleteDC(src); // Deleting temp HDC
-	//
-	////-------------------------------------------------------------------------
-	///*
-	//float fov_00[3] = { -80, 20, 15 };
-	//float fov_w0[3] = { -80, -15, 15 };
-	//float fov_0h[3] = { -80, 20, -15 };
-	//
-	//float center_screen[3];
-	//center_screen[0] = fov_00[0] + 0.5 * (fov_w0[0] - fov_00[0]) + 0.5 * (fov_0h[0] - fov_00[0]);
-	//center_screen[1] = fov_00[1] + 0.5 * (fov_w0[1] - fov_00[1]) + 0.5 * (fov_0h[1] - fov_00[1]);
-	//center_screen[2] = fov_00[2] + 0.5 * (fov_w0[2] - fov_00[2]) + 0.5 * (fov_0h[2] - fov_00[2]);
-	//
-	//float vec_h[3];
-	//vec_h[0] = fov_0h[0] - fov_00[0];
-	//vec_h[1] = fov_0h[1] - fov_00[1];
-	//vec_h[2] = fov_0h[2] - fov_00[2];
-	//
-	//float vec_w[3];
-	//vec_w[0] = fov_w0[0] - fov_00[0];
-	//vec_w[1] = fov_w0[1] - fov_00[1];
-	//vec_w[2] = fov_w0[2] - fov_00[2];
-	//
-	//float normal_screen[3];
-	//cross_product(normal_screen, vec_h, vec_w);
-	//unitary_vector(normal_screen);
-	//
-	//float view_point[3];
-	//view_point[0] = center_screen[0] + normal_screen[0] * 60;
-	//view_point[1] = center_screen[1] + normal_screen[1] * 60;
-	//view_point[2] = center_screen[2] + normal_screen[2] * 60;
-	//
-	////////////// copio variables de vista
-	//
-	//unsigned char* dev_rgb;
-	//int size = w * h;
-	//
-	//float* fov_00_d;
-	//float* fov_w0_d;
-	//float* fov_0h_d;
-	//float* view_point_d;
-	//
-	//cudaMalloc((void**)&dev_rgb, size * 3 * sizeof(char));
-	//cudaMalloc((void**)&fov_00_d, 3 * sizeof(float));
-	//cudaMalloc((void**)&fov_w0_d, 3 * sizeof(float));
-	//cudaMalloc((void**)&fov_0h_d, 3 * sizeof(float));
-	//cudaMalloc((void**)&view_point_d, 3 * sizeof(float));
-	//
-	//cudaMemcpy(fov_00_d, fov_00, 3 * sizeof(float), cudaMemcpyHostToDevice);
-	//cudaMemcpy(fov_w0_d, fov_w0, 3 * sizeof(float), cudaMemcpyHostToDevice);
-	//cudaMemcpy(fov_0h_d, fov_0h, 3 * sizeof(float), cudaMemcpyHostToDevice);
-	//cudaMemcpy(view_point_d, view_point, 3 * sizeof(float), cudaMemcpyHostToDevice);
-	//
-	///////// copio variables de modelo
-	//
-	//float* vertex_d;
-	//float* normals_d;
-	//float* color_d;
-	//int* faces_d;
-	//
-	//cudaMalloc((void**)&vertex_d, 3 * n_vertex * sizeof(float));
-	//cudaMalloc((void**)&normals_d, 3 * n_vertex * sizeof(float));
-	//cudaMalloc((void**)&color_d, 3 * n_vertex * sizeof(float));
-	//cudaMalloc((void**)&faces_d, 3 * n_faces * sizeof(int));
-	//
-	//cudaMemcpy(vertex_d, vertex, 3 * n_vertex * sizeof(float), cudaMemcpyHostToDevice);
-	//cudaMemcpy(normals_d, normals, 3 * n_vertex * sizeof(float), cudaMemcpyHostToDevice);
-	//cudaMemcpy(color_d, color, 3 * n_vertex * sizeof(float), cudaMemcpyHostToDevice);
-	//cudaMemcpy(faces_d, faces, 3 * n_faces * sizeof(int), cudaMemcpyHostToDevice);
-	//
-	////Copio variables textura
-	//
-	//int* w_textura_d;
-	//int* h_textura_d;
-	//char* rgb_textura_d;
-	//
-	//cudaMalloc((void**)&w_textura_d, sizeof(int));
-	//cudaMalloc((void**)&h_textura_d, sizeof(int));
-	//cudaMalloc((void**)&rgb_textura_d, 3 * (*h_textura) * (*w_textura) * sizeof(char));
-	//
-	//cudaMemcpy(w_textura_d, w_textura, sizeof(int), cudaMemcpyHostToDevice);
-	//cudaMemcpy(h_textura_d, h_textura, sizeof(int), cudaMemcpyHostToDevice);
-	//cudaMemcpy(rgb_textura_d, rgb_textura, 3 * (*h_textura) * (*w_textura) * sizeof(char), cudaMemcpyHostToDevice);
-	//
-	//////// lanzo kernel
-	//
-	//dim3 grid_size(IM_WIDTH / 32 + 1, IM_HEIGHT / 32 + 1);
-	//dim3 block_size(32, 32);
-	//
-	//kernel_raytracer << < grid_size, block_size >> >
-	//	(dev_rgb, size, fov_00_d, fov_w0_d, fov_0h_d, view_point_d, n_vertex, n_faces, vertex_d, normals_d, color_d, faces_d, w_textura_d, h_textura_d, rgb_textura_d);
-	//
-	//printf("Kernel done\n");
-	//
-	//cudaMemcpy(rgb, dev_rgb, size * 3 * sizeof(char), cudaMemcpyDeviceToHost);
-	//cudaFree(dev_rgb);
-	//*/
 }
 
 struct BMPHeader

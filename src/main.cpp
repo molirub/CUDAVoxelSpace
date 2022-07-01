@@ -144,7 +144,7 @@ void generate_image()
 	// CPU
 	//obtain_voxel_bmp(width, height, p_byte_array, camera_values);
 	//GPU
-	obtain_voxel_bmp_cuda(width, height, p_byte_array, camera_values);
+	obtain_voxel_bmp(width, height, p_byte_array, camera_values);
 	for (int i = 0; i < width * height*3; i += 3)
 	{
 		aux = p_byte_array[i];

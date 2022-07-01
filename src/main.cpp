@@ -186,15 +186,15 @@ void key_pressed_handler(WPARAM key)
 		// Move forward
 		case VK_UP:
 		case 'W':
-			camera_values.x -= sin(camera_values.angle) *1.8;
-			camera_values.y -= cos(camera_values.angle) * 1.8;
+			camera_values.x -= sin(camera_values.angle) *10;
+			camera_values.y -= cos(camera_values.angle) * 10;
 			break;
 
 		// Move backwards
 		case VK_DOWN:
 		case 'S':
-			camera_values.x += sin(camera_values.angle) * 1.8;
-			camera_values.y += cos(camera_values.angle) * 1.8;
+			camera_values.x += sin(camera_values.angle) * 10;
+			camera_values.y += cos(camera_values.angle) * 10;
 			break;
 
 		// Move up

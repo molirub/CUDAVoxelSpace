@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE current_instance, HINSTANCE prev_instance, PSTR cmd
 	camera_values.height = 100;
 	camera_values.angle = 0;
 	camera_values.horizon = IM_HEIGHT/2;
-	camera_values.distance = 600;
+	camera_values.distance = 800;
 
 	// Load cuda DLL
 
@@ -140,11 +140,12 @@ void draw(HWND hwnd)
 void generate_image()
 {
 	BYTE aux;
-
+	// Elegir si se quiere lanzar en GPU o en CPU
+	
 	// CPU
-	//obtain_voxel_bmp(width, height, p_byte_array, camera_values);
+	obtain_voxel_bmp(width, height, p_byte_array, camera_values);
 	//GPU
-	obtain_voxel_bmp_cuda(width, height, p_byte_array, camera_values);
+	//obtain_voxel_bmp_cuda(width, height, p_byte_array, camera_values);
 	for (int i = 0; i < width * height*3; i += 3)
 	{
 		aux = p_byte_array[i];

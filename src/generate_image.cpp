@@ -16,6 +16,7 @@
 #include <string>
 #include "generate_image.h"
 
+#define MAP_SELECTED 7 // Elegir qué mapa se quiere cargar
 
 int width_colores, height_colores;
 unsigned char* rgb_colores;
@@ -78,11 +79,13 @@ void init_voxel_maps(void)
 {
 	//Leemos BMP del mapa de colores y de alturas
 	//Mapa de colores 1024x1024 24 bit color a RGB bottom to top
-	char filename_colores[] = "../maps/C1W.bmp";
+	char filename_colores[30];
+	sprintf_s(filename_colores, "../maps/C%iW.bmp", MAP_SELECTED);
 	readBMP_RGB(filename_colores, &rgb_colores, &width_colores, &height_colores);
 
 	//Mapa de alturas 1024x1024 8 bit height map bottom to top
-	char filename_alturas[] = "../maps/D1.bmp";
+	char filename_alturas[30];
+	sprintf_s(filename_alturas, "../maps/D%i.bmp", MAP_SELECTED);
 	readBMP_HM(filename_alturas, &valor_alturas, &width_alturas, &height_alturas);
 }
 

@@ -16,7 +16,7 @@
 #include <string>
 #include "generate_image.h"
 
-#define MAP_SELECTED 7 // Elegir qué mapa se quiere cargar
+#define MAP_SELECTED 1 // Elegir qué mapa se quiere cargar
 
 int width_colores, height_colores;
 unsigned char* rgb_colores;
